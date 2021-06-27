@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ReqEx jar" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/ReqEx_jar/ReqEx.jar" />
+    <option name="WORKING_DIRECTORY" value="C:\Users\Kari\IdeaProjects\ReqEx" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+    <method v="2" />
+  </configuration>
+</component>
