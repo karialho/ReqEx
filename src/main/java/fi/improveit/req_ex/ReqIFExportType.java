@@ -438,17 +438,23 @@ public class ReqIFExportType extends Export {
                 Object o = t.getToObject();
                 if (o != null && o.getClass().equals(Requirement.class)) {
                     Requirement toR = ((Requirement) o);
-                    Project toProject = toR.getProject();
+                    RequirementType toType = toR.getRequirementType();
 
                     // Needs to be in the same project
-                    if (toProject.equals(pr)) {
-                        String source = fixTag(r.getRequirementType().getTag()) + r.getIDNumber();
-                        String target = fixTag(toR.getRequirementType().getTag()) + toR.getIDNumber();
-                        String relationID = source.concat("-to-").concat(target);
+                    // Using StringBuilder for better performance
+                    if (toR.getProject().equals(pr)) {
+                        StringBuilder source = new StringBuilder();
+                        source.append(fixTag(r.getRequirementType().getTag())).append(r.getIDNumber());
+                        StringBuilder target = new StringBuilder();
+                        target.append(fixTag(toType.getTag())).append(toR.getIDNumber());
+                        StringBuilder relationID =  new StringBuilder();
+                        relationID.append(source).append("-to-").append(target);
                         if (reverse_traces)
-                            of.writeSpecRelation(relationID, target, source, t.isSuspect());
+                            of.writeSpecRelation(relationID.toString(), target.toString(), source.toString(),
+                                    t.isSuspect());
                         else
-                            of.writeSpecRelation(relationID, source, target, t.isSuspect());
+                            of.writeSpecRelation(relationID.toString(), source.toString(), target.toString(),
+                                    t.isSuspect());
                     }
                 }
             } catch (ObjectDoesNotExistException e) {
@@ -467,14 +473,16 @@ public class ReqIFExportType extends Export {
                     Requirement toR = ((Requirement) o);
                     RequirementType toType = toR.getRequirementType();
 
-                    // Needs to be in the same project && same type, if the sameType flag is true
-                    // Using StringBuilder for better performance here
+                    // Needs to be in the same project && same type
+                    // Using StringBuilder for better performance
                     if (toR.getProject().equals(pr) && (toType.equals(rt))) {
+                        String tag = fixTag(toType.getTag());
                         StringBuilder source = new StringBuilder();
-                        source.append(fixTag(r.getRequirementType().getTag())).append(r.getIDNumber());
+                        source.append(tag).append(r.getIDNumber());
                         StringBuilder target = new StringBuilder();
-                        target.append(fixTag(toType.getTag())).append(toR.getIDNumber());
-                        StringBuilder relationID = source.append("-to-").append(target);
+                        target.append(tag).append(toR.getIDNumber());
+                        StringBuilder relationID =  new StringBuilder();
+                        relationID.append(source).append("-to-").append(target);
                         if (reverse_traces)
                             of.writeSpecRelation(relationID.toString(), target.toString(), source.toString(),
                                     t.isSuspect());

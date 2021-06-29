@@ -9,6 +9,8 @@ public class CaliberPanel extends JPanel {
 	private final JTextField user;
 	private final JPasswordField password;
 
+	// TODO: include version number and copyright message
+
 	CaliberPanel() {
 		this.setLayout(new GridBagLayout());
 
