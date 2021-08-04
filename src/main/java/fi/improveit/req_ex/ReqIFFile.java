@@ -32,6 +32,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.UUID;
+
+import javanet.staxutils.IndentingXMLStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +94,8 @@ public class ReqIFFile {
             logger.warn("Overwriting existing export file: {}", pathname);
         fos = new FileOutputStream(pathname);
         osw = new OutputStreamWriter(fos);
-        xtw = xof.createXMLStreamWriter(fos, "utf-8");
+        XMLStreamWriter writer = xof.createXMLStreamWriter(fos, "utf-8");
+        xtw = new IndentingXMLStreamWriter(writer);
         xtw.writeStartDocument("utf-8", "1.0");
         xtw.writeStartElement("REQ-IF");
         xtw.writeAttribute("xmlns", "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd");

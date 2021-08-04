@@ -46,14 +46,14 @@ public class ReqIFXHTML {
             "samp", "span", "strong", "var",                        // Text Module
             "dl", "dt", "dd", "ol", "ul", "li",                     // List Module
             "a",                                                    // Hypertext Module
-            "del", "ins",                                           // Edit Module
             "b", "big", "hr", "i", "small", "sub", "sup", "tt",     // Presentation Module
             "caption", "table", "td", "th", "tr",                   // Basic Tables Module
             "object", "param"                                       // Object Module
     };
 
     static final String[] bannedTags = {
-            "font", "div", "colgroup", "col", "tbody"
+            "font", "div", "colgroup", "col", "tbody",
+            "del", "ins"                                            // These are in the "Edit Module" but cannot really support these
     };
 
     protected static String htmlToXhtml(ReqIFExportType exp, final String html) throws RemoteServerException {
@@ -138,20 +138,28 @@ public class ReqIFXHTML {
             attrs.remove("bordercolor");
             attrs.remove("style");
             attrs.add("style", style.toString());
+            attrs.remove("align");
         }
 
         // Remove illegal attributes from tags
         Elements p = body.select("p");
         p.removeAttr("align");
+        p.removeAttr("dir");
         Elements td = body.select("td");
         td.removeAttr("width");
+        td.removeAttr("height");
         td.removeAttr("nowrap");
         Elements ul = body.select("ul");
         ul.removeAttr("type");
+        ul.removeAttr("dir");
+        Elements span = body.select("span");
+        span.removeAttr("dir");
         Elements li = body.select("li");
         li.removeAttr("align");
         Elements blockquote = body.select("blockquote");
         blockquote.removeAttr("dir");
+        Elements a = body.select("a");
+        a.removeAttr("name");
 
         // Add reqif-xhtml: namespace to all supported tags
         for (String tag : allowedTags) {
