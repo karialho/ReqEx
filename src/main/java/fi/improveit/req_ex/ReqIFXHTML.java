@@ -145,6 +145,7 @@ public class ReqIFXHTML {
         p.removeAttr("align");
         Elements td = body.select("td");
         td.removeAttr("width");
+        td.removeAttr("nowrap");
         Elements ul = body.select("ul");
         ul.removeAttr("type");
         Elements li = body.select("li");
