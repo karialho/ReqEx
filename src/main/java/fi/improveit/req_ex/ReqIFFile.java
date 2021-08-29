@@ -192,6 +192,7 @@ public class ReqIFFile {
         xtw.writeEndElement();  // DATATYPES
     }
 
+    // Modify identifier so that it is a valid XML ID
     private String fixID(String s) {
         return s.replaceAll("[^-_:a-zA-Z]", "-");
     }
@@ -296,7 +297,10 @@ public class ReqIFFile {
                 entries.add(longName);
                 xtw.writeStartElement("ENUM-VALUE");
                 xtw.writeAttribute("LAST-CHANGE", creationTime);
-                xtw.writeAttribute("IDENTIFIER", fixID(longName) + "-" + fixID(name) + "-value");
+                if (longName.length() == 0)
+                    xtw.writeAttribute("IDENTIFIER", fixID(name) + "-value_Empty");
+                else
+                    xtw.writeAttribute("IDENTIFIER", fixID(name) + "-value_" + fixID(longName));
                 xtw.writeAttribute("LONG-NAME", longName);
                 xtw.writeStartElement("PROPERTIES");
                 xtw.writeStartElement("EMBEDDED-VALUE");
@@ -325,9 +329,9 @@ public class ReqIFFile {
                xtw.writeStartElement("ENUM-VALUE");
                 xtw.writeAttribute("LAST-CHANGE", creationTime);
                 if (v.length() == 0)
-                    xtw.writeAttribute("IDENTIFIER", "Empty-" + fixID(name) + "-value");
+                    xtw.writeAttribute("IDENTIFIER", fixID(name) + "-value_Empty");
                 else
-                    xtw.writeAttribute("IDENTIFIER", v + "-" + fixID(name) + "-value");
+                    xtw.writeAttribute("IDENTIFIER", fixID(name) + "-value_" + v);
                 xtw.writeAttribute("LONG-NAME", v);
                 xtw.writeStartElement("PROPERTIES");
                 xtw.writeStartElement("EMBEDDED-VALUE");
@@ -661,9 +665,9 @@ public class ReqIFFile {
         if (value != null) {
             xtw.writeStartElement("ENUM-VALUE-REF");
             if (value.length() == 0)
-                xtw.writeCharacters("Empty-" + fixID(name) + "-value");
+                xtw.writeCharacters(fixID(name) + "-value_Empty");
             else
-                xtw.writeCharacters(fixID(value) + "-" + fixID(name) + "-value");
+                xtw.writeCharacters( fixID(name) + "-value_" + fixID(value));
             xtw.writeEndElement();  // ENUM-VALUE-REF
         }
         xtw.writeEndElement();  // VALUES
@@ -686,9 +690,9 @@ public class ReqIFFile {
             if (value != null) {
                 xtw.writeStartElement("ENUM-VALUE-REF");
                 if (value.length() == 0)
-                    xtw.writeCharacters("Empty-" + fixID(name) + "-value");
+                    xtw.writeCharacters(fixID(name) + "-value_Empty");
                 else
-                    xtw.writeCharacters(fixID(value) + "-" + fixID(name) + "-value");
+                    xtw.writeCharacters( fixID(name) + "-value_" + fixID(value));
                 xtw.writeEndElement();  // ENUM-VALUE-REF
             }
         }

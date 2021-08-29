@@ -46,6 +46,7 @@ public class ReqIFExportType extends Export {
     private static final String CALIBER_NAME_ATTRIBUTE = "ReqIF.Name";
     private static final String CALIBER_DESCRIPTION_ATTRIBUTE = "ReqIF.Description";
     private static final String CALIBER_VERSION_ATTRIBUTE = "ReqIF.ForeignRevision";
+    private static final String CALIBER_CHANGED_ON_ATTRIBUTE = "ReqIF.ForeignModifiedOn";
     private static final String CALIBER_CHANGED_BY_ATTRIBUTE = "ReqIF.ForeignModifiedBy";
     private static final String CALIBER_CREATED_ON_ATTRIBUTE = "ReqIF.ForeignCreatedOn";
     private static final String CALIBER_OWNER_ATTRIBUTE = "ReqIF.ForeignCreatedBy";
@@ -214,6 +215,7 @@ public class ReqIFExportType extends Export {
         of.writeStringAttribute(tag, CALIBER_NAME_ATTRIBUTE, "The name the requirement.");
         of.writeStringAttribute(tag, CALIBER_ID_ATTRIBUTE, "The tag and ID of the requirement.");
         of.writeStringAttribute(tag, CALIBER_VERSION_ATTRIBUTE, "The requirement's version.");
+        of.writeDateAttribute(tag, CALIBER_CHANGED_ON_ATTRIBUTE, "Time and date of last change.");
         of.writeStringAttribute(tag, CALIBER_CHANGED_BY_ATTRIBUTE, "User who made the last change.");
         of.writeDateAttribute(tag, CALIBER_CREATED_ON_ATTRIBUTE, "Time and date when created.");
         of.writeStringAttribute(tag, CALIBER_OWNER_ATTRIBUTE, "The requirement's owner.");
@@ -269,6 +271,8 @@ public class ReqIFExportType extends Export {
             String tag = fixTag(r.getRequirementType().getTag());
             String ID = tag + r.getIDNumber();
 
+            logger.info("Requirement ID: {}", ID);
+
             // Get creation time
             HistoryRevision[] rev = r.getHistory().getRevisions();
             Date creationTime = rev[0].getDate();
@@ -292,6 +296,7 @@ public class ReqIFExportType extends Export {
             of.writeStringAttributeValue(tag, CALIBER_NAME_ATTRIBUTE, r.getName());
             of.writeStringAttributeValue(tag, CALIBER_ID_ATTRIBUTE, ID);
             of.writeStringAttributeValue(tag, CALIBER_VERSION_ATTRIBUTE, versionString);
+            of.writeDateAttributeValue(tag, CALIBER_CHANGED_ON_ATTRIBUTE, modTime);
             of.writeStringAttributeValue(tag, CALIBER_CHANGED_BY_ATTRIBUTE, changedBy);
             of.writeDateAttributeValue(tag, CALIBER_CREATED_ON_ATTRIBUTE, creationTime);
             of.writeStringAttributeValue(tag, CALIBER_OWNER_ATTRIBUTE, ownerFullName(r));
@@ -306,7 +311,6 @@ public class ReqIFExportType extends Export {
                     type = "Functional";
                 of.writeEnumAttributeValue(tag, "Type", type);
             }
-
 
             // Output description
             String orig = r.getDescription().getText();
@@ -367,7 +371,7 @@ public class ReqIFExportType extends Export {
 
     private String toPlainText(String s) throws SAXException {
         String plain = HTMLHelper.htmlToPlainText(s);
-        return plain.trim();
+        return plain.replace("&", "&amp;").trim();
     }
 
     public void exportSpecifications() throws ExportException {
