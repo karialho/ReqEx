@@ -49,7 +49,7 @@ public class RoundTripGUI implements ActionListener, PropertyChangeListener {
 
     static protected RoundTripGUI theGUI;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger("RoundTripGUI");
 
     final static String[] PANEL_NAME =
             {"CaliberPanel", "ExportPanel", "ProgressPanel", "SummaryPanel"};
