@@ -19,6 +19,7 @@ Note that the jar files from the Caliber SDK are listed with system scope, and s
 Once you have the executable jar with dependent libraries ready you can copy it into a suitable installation directory.
 ## Running ReqEx
 Open Windows command prompt and CD to the installation directory.
+
 ![Command prompt](CommandPrompt.png)
 
 Enter **java -jar ReqEx.jar** to the command line.
@@ -131,6 +132,7 @@ The output from ReqEx uses the following content subsections mapped to specific 
 |Specifications|This section includes a requirement “specification”. It specifies the hierarchy of requirements in one type referencing the objects in the SpecObjects section.|
 
 As a summary, the complete ReqIF file has a structure like this:
+
 ![ReqIFXML](ReqIFXLM.png)
 ## Exported Excel file
 The Excel file output is an .xlsx file with each Caliber requirement type exported to a separate Excel worksheet.
