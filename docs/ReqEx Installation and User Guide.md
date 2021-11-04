@@ -74,7 +74,7 @@ The following file names will be used by the export. Following placeholders will
 |Logs|<p>By default, a directory named *log* will be used in the installation directory for export logs.</p><p>A new export will be generated for every export, with the default log filename format of:</p><p>yyyy-MM-dd HH-mm-ss reqEx.log</p><p></p><p>Logging utilizes [logback](http://logback.qos.ch/) and it can be configured further by modifying the resources/logback.xml configuration file.</p>|
 
 ### Properties
-ReqEx also uses a Java Properties file to save some default commonly used field values and enable some more rarery used options to be changed. The property file is named **.reqex** in the user’s home directory. The tool will store a new property file if one does not exist.
+ReqEx also uses a Java Properties file to save some default commonly used field values and enable some more rarely used options to be changed. The property file is named **.reqex** in the user’s home directory. The tool will store a new property file if one does not exist.
 
 The following settings/defaults can be specified in the property file:
 
