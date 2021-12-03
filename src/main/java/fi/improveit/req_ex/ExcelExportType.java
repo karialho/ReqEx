@@ -22,6 +22,7 @@ import com.starbase.caliber.Trace;
 import com.starbase.caliber.attribute.Attribute;
 import com.starbase.caliber.attribute.AttributeValue;
 import com.starbase.caliber.attribute.UDAList;
+import com.starbase.caliber.server.ObjectDoesNotExistException;
 import com.starbase.caliber.server.RemoteServerException;
 import com.starbase.caliber.util.HTMLHelper;
 import org.xml.sax.SAXException;
@@ -187,22 +188,35 @@ public class ExcelExportType extends Export {
         int i = 0;
         StringBuilder traceList = new StringBuilder();
         for (Trace t : traces) {
-            String tag = "";
-            String project = "";
-            if (t.getToObject().getClass().equals(Requirement.class)) {
-                tag = ((Requirement) t.getToObject()).getRequirementType().getTag();
-                project = ((Requirement) t.getToObject()).getProject().getName();
-            }
-            traceList.append(tag).append(t.getTraceToID().getIDNumber()).append(" | ").append(project);
-            if (++i < traceCount) {
-                traceList.append("\n");
+            try {
+                Object o = t.getToObject();
+                if (o != null) {
+                    String tag = "";
+                    String project = "";
+                    if (o.getClass().equals(Requirement.class)) {
+                        tag = ((Requirement) o).getRequirementType().getTag();
+                        project = ((Requirement) o).getProject().getName();
+                    }
+                    traceList.append(tag).append(t.getTraceToID().getIDNumber());
+                    if (project.equals(this.project))
+                        traceList.append(" | ").append(project);
+                    else
+                        traceList.append(" || ").append(project);
+                    if (++i < traceCount) {
+                        traceList.append("\n");
+                    }
+                }
+            } catch (ObjectDoesNotExistException e) {
+                logger.warn("ObjectDoesNotExistException in exportTracesTo(). Probably ToObject of trace is deleted.");
             }
         }
         eof.addCellWrapStyle(traceList.toString());
     }
 
-    // these are null implementations for ExcelExportProject class
-    public void exportSpecifications() {}
-    public void exportTraces() {}
+        // these are null implementations for ExcelExportProject class
+        public void exportSpecifications () {
+        }
+        public void exportTraces () {
+        }
 
-}
+    }

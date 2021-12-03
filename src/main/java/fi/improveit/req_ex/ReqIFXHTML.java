@@ -77,6 +77,12 @@ public class ReqIFXHTML {
         if (!imgs.isEmpty())
             fixImages(exp, imgs);
 
+        // Fix link texts for codebeamer X (remove non-breaking space + following [] + anything within)
+        // Temporary fix until codebeamer X can handle this
+        Elements links = body.select("a");
+        if (!links.isEmpty())
+            fixLinks(links);
+
         // Convert <font color="xxxxxx"> to <span style="color:xxxxxx">
         // Convert <font face="yyyyyy"> to <span style="font-family:yyyyyy">
         Elements font = body.select("font");
@@ -171,6 +177,19 @@ public class ReqIFXHTML {
         doc.outputSettings().escapeMode(org.jsoup.nodes.Entities.EscapeMode.xhtml);
 
         return body.html();
+    }
+
+    // Fix link texts for codebeamer X (remove non-breaking spaces + [] and anything within)
+    private static void fixLinks(Elements links) {
+        for (Element e : links) {
+            String html = e.html();
+            String nospace = html.replace("&nbsp;", "");
+            nospace = nospace.replace("&#xa0;", "");
+            String fixed = nospace.replaceAll("\\[.*\\]", "");
+            logger.info("Original link text: {}", html);
+            logger.info("Fixed link text: {}", fixed);
+            e.html(fixed);
+        }
     }
 
     // Convert unsupported <img> to <object>

@@ -67,10 +67,10 @@ public class ReqIFExportType extends Export {
         dataTypeAttributes = new HashSet<>();
         relationGroups = new HashMap<>();
         exportFiles = new HashSet<>();
-        if (Defaults.get("reverse_traces").equals("true")) {
+        if ("true".equals(Defaults.get("reverse_traces"))) {
             reverse_traces = true;
         }
-        if (Defaults.get("include_type_attr").equals("true")) {
+        if ("true".equals(Defaults.get("include_type_attr"))) {
             include_type_attr = true;
         }
         logger.info("Reverse traces: {}", reverse_traces);
