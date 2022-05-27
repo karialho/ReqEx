@@ -72,6 +72,11 @@ public class ReqIFXHTML {
         strike.tagName("reqif-xhtml:span");
         strike.attr("style", "text-decoration:line-through");
 
+        // Convert unsupported <nobr> to <span style="white-space: nowrap">
+        Elements nobr = body.select("nobr");
+        nobr.tagName("reqif-xhtml:span");
+        nobr.attr("style", "white-space: nowrap");
+
         // Convert image to object
         Elements imgs = body.select("img");
         if (!imgs.isEmpty())

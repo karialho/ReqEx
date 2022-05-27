@@ -21,6 +21,7 @@ import com.starbase.caliber.attribute.*;
 import com.starbase.caliber.server.ObjectDoesNotExistException;
 import com.starbase.caliber.server.RemoteServerException;
 import com.starbase.caliber.util.HTMLHelper;
+import com.starbase.caliber.util.UnicodeHelper;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
@@ -46,17 +47,19 @@ public class ReqIFExportType extends Export {
     private static final String CALIBER_NAME_ATTRIBUTE = "ReqIF.Name";
     private static final String CALIBER_DESCRIPTION_ATTRIBUTE = "ReqIF.Description";
     private static final String CALIBER_VERSION_ATTRIBUTE = "ReqIF.ForeignRevision";
-    private static final String CALIBER_CHANGED_ON_ATTRIBUTE = "ReqIF.ForeignModifiedOn";
+    private static final String CALIBER_CHANGED_ON_ATTRIBUTE = "ReqIF.ForeignModifiedAt";
     private static final String CALIBER_CHANGED_BY_ATTRIBUTE = "ReqIF.ForeignModifiedBy";
-    private static final String CALIBER_CREATED_ON_ATTRIBUTE = "ReqIF.ForeignCreatedOn";
+    private static final String CALIBER_CREATED_ON_ATTRIBUTE = "ReqIF.ForeignCreatedAt";
     private static final String CALIBER_OWNER_ATTRIBUTE = "ReqIF.ForeignCreatedBy";
 
     protected static final Logger logger = LoggerFactory.getLogger(ReqIFExportType.class.getName());
     protected ReqIFFile of;
-    protected HashSet<Attribute> dataTypeAttributes;
-    protected HashSet<String> exportFiles;      // set of files for the zip archive
-    private boolean reverse_traces;
-    private boolean include_type_attr;
+    protected HashSet<Attribute> dataTypeAttributes;            // hash of attributes already listed to avoid dupes
+    protected HashSet<String> exportFiles;                      // set of files for the zip archive
+    private boolean reverse_traces;                             // option for reversing trace direction globally
+    private boolean include_type_attr;                          // option for type attribute (enables folder identification)
+    private HashSet<String> statusValues;
+    private HashSet<String> priorityValues;
     final static String[] TYPE_VALUES =
             {"Folder", "Functional"};
 
@@ -163,7 +166,7 @@ public class ReqIFExportType extends Export {
     }
 
     // Export data types related to system attributes
-    protected void exportSystemDataTypes() throws XMLStreamException, CaliberException {
+    protected void exportSystemDataTypes() throws XMLStreamException, CaliberException, RemoteServerException {
         logger.info("Exporting data types of system attributes");
         // Built-in standard data types
         of.writeStringDataType("String", 128);
@@ -171,6 +174,10 @@ public class ReqIFExportType extends Export {
         of.writeBooleanDataType();
         of.writeDateDataType();
 
+        getUsedStatusValues();
+        of.writeEnumDataType("Status", statusValues.toArray(new String[0]));
+        of.writeEnumDataType("Priority", priorityValues.toArray(new String[0]));
+/*
         for (Attribute a : cs.getAttributes()) {
             if (a instanceof UDAList) {
                 if (a.getName().equals("Requirement Status"))
@@ -179,8 +186,44 @@ public class ReqIFExportType extends Export {
                     of.writeEnumDataType("Priority", (UDAList) a);
             }
         }
+*/
         if (include_type_attr) {
             of.writeEnumDataType("Type", TYPE_VALUES);
+        }
+    }
+
+    // Returns all *used* Status attribute values of the current requirement type or the whole project
+    protected void getUsedStatusValues() throws RemoteServerException, CaliberException {
+        statusValues = new HashSet<>();
+        priorityValues = new HashSet<>();
+
+        if (rt == null) {       // project export - iterate over all types
+            for (RequirementType t : cs.getTypes()) {
+                logger.info("Getting used status and priority values for type {}", t.getName());
+                for (Requirement r : t.getRequirements(cs.getBaseline())) {
+                    getStatusAndPriorityValues(r);
+                }
+            }
+        } else {                // single type export
+            logger.info("Getting used status and priority values for single type {}", rt.getName());
+            for (Requirement r : rt.getRequirements(cs.getBaseline())) {
+                getStatusAndPriorityValues(r);
+            }
+        }
+        logger.info("Used status values: {}", statusValues.toString());
+        logger.info("Used priority values: {}", priorityValues.toString());
+    }
+
+    private void getStatusAndPriorityValues(Requirement r) throws RemoteServerException {
+        String s = r.getStatus().getSelectedValue().toString();
+        statusValues.add(s);
+        logger.info("Status: {}", s);
+        s = r.getPriority().getSelectedValue().toString();
+        priorityValues.add(s);
+        logger.info("Priority: {}", s);
+        // recursion for the children
+        for (Requirement c : r.getChildRequirements()) {
+            getStatusAndPriorityValues(c);
         }
     }
 
@@ -315,6 +358,7 @@ public class ReqIFExportType extends Export {
             // Output description
             String orig = r.getDescription().getText();
             logger.info("Original Description HTML: {}", orig);
+            logger.info("isUTF8: {}", UnicodeHelper.isUTF8(orig));
             String xhtml;
             if (ep.isPlaintext()) {
                 xhtml = toPlainText(orig);

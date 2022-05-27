@@ -282,6 +282,7 @@ public class ReqIFFile {
         int index = 0;
         HashSet<String> entries = new HashSet<>();
         for (UDAListEntry c : a.getListEntries()) {
+            logger.info("UDAListEntry.toString(): {}", c.toString());
             Object e = c.getObject();
             // skip possible null elements
             if (e != null) {
@@ -331,7 +332,7 @@ public class ReqIFFile {
                 if (v.length() == 0)
                     xtw.writeAttribute("IDENTIFIER", fixID(name) + "-value_Empty");
                 else
-                    xtw.writeAttribute("IDENTIFIER", fixID(name) + "-value_" + v);
+                    xtw.writeAttribute("IDENTIFIER", fixID(name) + "-value_" + fixID(v));
                 xtw.writeAttribute("LONG-NAME", v);
                 xtw.writeStartElement("PROPERTIES");
                 xtw.writeStartElement("EMBEDDED-VALUE");
