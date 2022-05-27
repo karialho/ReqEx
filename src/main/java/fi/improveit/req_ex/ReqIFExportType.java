@@ -50,7 +50,8 @@ public class ReqIFExportType extends Export {
     private static final String CALIBER_CHANGED_ON_ATTRIBUTE = "ReqIF.ForeignModifiedAt";
     private static final String CALIBER_CHANGED_BY_ATTRIBUTE = "ReqIF.ForeignModifiedBy";
     private static final String CALIBER_CREATED_ON_ATTRIBUTE = "ReqIF.ForeignCreatedAt";
-    private static final String CALIBER_OWNER_ATTRIBUTE = "ReqIF.ForeignCreatedBy";
+    private static final String CALIBER_CREATED_BY_ATTRIBUTE = "ReqIF.ForeignCreatedBy";
+    private static final String CALIBER_OWNER_ATTRIBUTE = "ReqIF.ForeignOwner";
 
     protected static final Logger logger = LoggerFactory.getLogger(ReqIFExportType.class.getName());
     protected ReqIFFile of;
@@ -217,10 +218,8 @@ public class ReqIFExportType extends Export {
     private void getStatusAndPriorityValues(Requirement r) throws RemoteServerException {
         String s = r.getStatus().getSelectedValue().toString();
         statusValues.add(s);
-        logger.info("Status: {}", s);
         s = r.getPriority().getSelectedValue().toString();
         priorityValues.add(s);
-        logger.info("Priority: {}", s);
         // recursion for the children
         for (Requirement c : r.getChildRequirements()) {
             getStatusAndPriorityValues(c);
@@ -261,6 +260,7 @@ public class ReqIFExportType extends Export {
         of.writeDateAttribute(tag, CALIBER_CHANGED_ON_ATTRIBUTE, "Time and date of last change.");
         of.writeStringAttribute(tag, CALIBER_CHANGED_BY_ATTRIBUTE, "User who made the last change.");
         of.writeDateAttribute(tag, CALIBER_CREATED_ON_ATTRIBUTE, "Time and date when created.");
+        of.writeStringAttribute(tag, CALIBER_CREATED_BY_ATTRIBUTE, "User who created the requirement.");
         of.writeStringAttribute(tag, CALIBER_OWNER_ATTRIBUTE, "The requirement's owner.");
         of.writeEnumAttribute(tag, "Status", "The requirement's status.", false);
         of.writeEnumAttribute(tag, "Priority", "The requirement's priority.", false);
@@ -316,9 +316,11 @@ public class ReqIFExportType extends Export {
 
             logger.info("Requirement ID: {}", ID);
 
-            // Get creation time
+            // Get creation time & created by
             HistoryRevision[] rev = r.getHistory().getRevisions();
             Date creationTime = rev[0].getDate();
+            User createdByUser = rev[0].getUser();
+            String createdBy = createdByUser.getFirstName() + " " + createdByUser.getLastName();
 
             // Get last modification time & changed by
             int last = rev.length - 1;
@@ -342,6 +344,7 @@ public class ReqIFExportType extends Export {
             of.writeDateAttributeValue(tag, CALIBER_CHANGED_ON_ATTRIBUTE, modTime);
             of.writeStringAttributeValue(tag, CALIBER_CHANGED_BY_ATTRIBUTE, changedBy);
             of.writeDateAttributeValue(tag, CALIBER_CREATED_ON_ATTRIBUTE, creationTime);
+            of.writeStringAttributeValue(tag, CALIBER_CREATED_BY_ATTRIBUTE, createdBy);
             of.writeStringAttributeValue(tag, CALIBER_OWNER_ATTRIBUTE, ownerFullName(r));
             of.writeEnumAttributeValue(tag, "Status", r.getStatus().getSelectedValue().toString());
             of.writeEnumAttributeValue(tag, "Priority", r.getPriority().getSelectedValue().toString());
