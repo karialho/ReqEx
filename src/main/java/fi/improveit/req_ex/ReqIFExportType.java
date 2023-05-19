@@ -26,6 +26,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -361,7 +362,7 @@ public class ReqIFExportType extends Export {
             // Output description
             String orig = r.getDescription().getText();
             logger.info("Original Description HTML: {}", orig);
-            logger.info("isUTF8: {}", UnicodeHelper.isUTF8(orig));
+
             String xhtml;
             if (ep.isPlaintext()) {
                 xhtml = toPlainText(orig);

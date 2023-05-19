@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -93,7 +94,7 @@ public class ReqIFFile {
         if (check.exists())
             logger.warn("Overwriting existing export file: {}", pathname);
         fos = new FileOutputStream(pathname);
-        osw = new OutputStreamWriter(fos);
+        osw = new OutputStreamWriter(fos, Charset.forName("UTF-8"));
         XMLStreamWriter writer = xof.createXMLStreamWriter(fos, "utf-8");
         xtw = new IndentingXMLStreamWriter(writer);
         xtw.writeStartDocument("utf-8", "1.0");

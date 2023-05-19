@@ -8,3 +8,10 @@ Building ReqEx requires the proprietary Caliber SDK Java library (version 11.5 o
 The ReqEx tool is developed and copyrighted by ImproveIt Oy, and licensed with the Apache License 2.0.
 
 For information on building and using the tool, please refer tpo documentation in the [docs](docs) directory.
+
+## Version 1.1
+
+The following fixes and improvements are included in this version:
+1. Caliber requirement data containing windows-1252 encoded text is now correctly written to the resulting ReqIF file as UTF-8.
+2. The maven build process is improved by adding proprietary Caliber libraries into a local maven repository. This way the excecutable JAR file has them in the classpath.
+3. The pom now uses new versions of several libraries to avoid the vulnerabilities detected in the previous versions.
