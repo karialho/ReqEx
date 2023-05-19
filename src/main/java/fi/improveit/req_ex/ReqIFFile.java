@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -94,7 +94,7 @@ public class ReqIFFile {
         if (check.exists())
             logger.warn("Overwriting existing export file: {}", pathname);
         fos = new FileOutputStream(pathname);
-        osw = new OutputStreamWriter(fos, Charset.forName("UTF-8"));
+        osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
         XMLStreamWriter writer = xof.createXMLStreamWriter(fos, "utf-8");
         xtw = new IndentingXMLStreamWriter(writer);
         xtw.writeStartDocument("utf-8", "1.0");
@@ -833,6 +833,7 @@ public class ReqIFFile {
         xtw.writeEndElement();
     }
 
+    /* Relation groups are currently not used.
     public void startRelationGroups() throws XMLStreamException {
         logger.info("Writing SPEC-RELATION-GROUPS.");
         xtw.writeStartElement("SPEC-RELATION-GROUPS");
@@ -881,5 +882,7 @@ public class ReqIFFile {
 
         logger.info("RELATION-GROUP added: {}", group);
     }
+
+     */
 
 }

@@ -21,17 +21,14 @@ import com.starbase.caliber.attribute.*;
 import com.starbase.caliber.server.ObjectDoesNotExistException;
 import com.starbase.caliber.server.RemoteServerException;
 import com.starbase.caliber.util.HTMLHelper;
-import com.starbase.caliber.util.UnicodeHelper;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -70,7 +67,7 @@ public class ReqIFExportType extends Export {
     public ReqIFExportType(CaliberSession s, String p, String reqt, String od, int maxReq, ExportPanel ep, ProgressPanel pp) throws ExportException {
         super(s, p, reqt, od, maxReq, ep, pp);
         dataTypeAttributes = new HashSet<>();
-        relationGroups = new HashMap<>();
+        // relationGroups = new HashMap<>();
         exportFiles = new HashSet<>();
         if ("true".equals(Defaults.get("reverse_traces"))) {
             reverse_traces = true;
@@ -405,18 +402,6 @@ public class ReqIFExportType extends Export {
         return df.format(date);
     }
 
-    // remove harmful extra tags from description html
-    // leave everything between <body> and </body>
-    private String stripHead(String s) {
-        int start, end;
-        if (((start = s.indexOf("<body>")) == -1)
-                || ((end = s.indexOf("</body>", start + 6)) == -1)) {
-            return s;
-        } else {
-            return s.substring(start + 6, end);
-        }
-    }
-
     private String toPlainText(String s) throws SAXException {
         String plain = HTMLHelper.htmlToPlainText(s);
         return plain.replace("&", "&amp;").trim();
@@ -565,6 +550,8 @@ public class ReqIFExportType extends Export {
         }
     }
 
+    /* Relation groups are not currently used
+
     protected HashMap<String, HashSet<String>> relationGroups;
 
     // Add to relation group map, if entry is not there already
@@ -595,5 +582,7 @@ public class ReqIFExportType extends Export {
         });
         of.endRelationGroups();
     }
+
+     */
 
 }

@@ -29,7 +29,7 @@ import java.util.List;
 
 public class RoundTripGUI implements ActionListener, PropertyChangeListener {
 
-    final static String VERSION = "1.0";
+    final static String VERSION = "1.1";
     private final JButton prev;
     private final JButton next;
     private final JButton cancel;

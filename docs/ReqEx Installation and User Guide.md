@@ -14,15 +14,12 @@ Other system requirements are:
 ## Building
 The provided Maven pom.xml file lists all the required libararies to compile the system. You can use your faforite IDE to compile the project based on pom.xml.
 
-Note that the jar files from the Caliber SDK are listed with system scope, and so they are not necessary copied into the executable jar if you are using maven as the build tool. I have used the IntelliJ IDEA (Community Edition) to build the executable jar without issues.
+Note that the jar files from the Caliber SDK need to be installed to a local maven repository before the build succeeds. The provided "caliber-libs-install.bat" script includes the needed maven commands. I have used the IntelliJ IDEA (Community Edition) to build the executable jar without issues.
 ## Installation
-Once you have the executable jar with dependent libraries ready you can copy it into a suitable installation directory.
+Once you have the executable jar with dependent libraries in the "libs" subdirectory you can copy them into a suitable installation directory (or just run them from the target directory).
 ## Running ReqEx
-Open Windows command prompt and CD to the installation directory.
-
-![Command prompt](CommandPrompt.png)
-
-Enter **java -jar ReqEx.jar** to the command line.
+Open Windows command prompt and CD to the target/installation directory.
+Enter **java -jar ReqEx-1.1.jar** to the command line.
 
 You should now see some informational output in the console. The ReqEx login screen should appear on your desktop.
 ### Step 1: Log in
