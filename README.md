@@ -7,7 +7,7 @@ Building ReqEx requires the proprietary Caliber SDK Java library (version 11.5 o
 
 The ReqEx tool is developed and copyrighted by ImproveIt Oy, and licensed with the Apache License 2.0.
 
-For information on building and using the tool, please refer tpo documentation in the [docs](docs) directory.
+For information on building and using the tool, please refer to the documentation in the [docs](docs) directory.
 
 ## Version 1.1
 
