@@ -9,9 +9,9 @@ The ReqEx tool is developed and copyrighted by ImproveIt Oy, and licensed with t
 
 For information on building and using the tool, please refer to the documentation in the [docs](docs) directory.
 
-## Version 1.1
+## Version 1.1 - May 2023
 
 The following fixes and improvements are included in this version:
 1. Caliber requirement data containing windows-1252 encoded text is now correctly written to the resulting ReqIF file as UTF-8.
 2. The maven build process is improved by adding proprietary Caliber libraries into a local maven repository. This way the excecutable JAR file has them in the classpath.
-3. The pom now uses new versions of several libraries to avoid the vulnerabilities detected in the previous versions.
+3. The pom now refers to updated versions of several dependent Java libraries to avoid the vulnerabilities detected in the previous versions.
